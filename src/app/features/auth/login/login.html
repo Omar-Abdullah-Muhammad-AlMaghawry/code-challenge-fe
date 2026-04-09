@@ -1,4 +1,18 @@
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-indigo-800 to-blue-700 p-4">
+
+  <!-- Language Selector (top-right) -->
+  <div class="absolute top-4 right-4">
+    <select
+      [value]="langService.currentLang()"
+      (change)="langService.setLanguage($any($event.target).value)"
+      class="text-sm bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-white/40 cursor-pointer backdrop-blur-sm"
+    >
+      @for (lang of langService.languages; track lang.code) {
+        <option [value]="lang.code" class="text-gray-800">{{ lang.label }}</option>
+      }
+    </select>
+  </div>
+
   <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
 
     <!-- Header -->
@@ -6,8 +20,8 @@
       <div class="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center mb-4 shadow-lg">
         <mat-icon class="text-white text-3xl">lock</mat-icon>
       </div>
-      <h1 class="text-3xl font-bold text-gray-800">Welcome Back</h1>
-      <p class="text-gray-500 mt-1 text-sm">Sign in to your account</p>
+      <h1 class="text-3xl font-bold text-gray-800">{{ 'AUTH.WELCOME_BACK' | translate }}</h1>
+      <p class="text-gray-500 mt-1 text-sm">{{ 'AUTH.SIGN_IN_SUBTITLE' | translate }}</p>
     </div>
 
     <!-- Form -->
@@ -15,7 +29,7 @@
 
       <!-- Username -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+        <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'AUTH.USERNAME_LABEL' | translate }}</label>
         <div class="relative">
           <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
             <mat-icon class="text-lg leading-none">person</mat-icon>
@@ -23,19 +37,19 @@
           <input
             formControlName="username"
             type="text"
-            placeholder="Enter your username"
+            [placeholder]="'AUTH.USERNAME_PLACEHOLDER' | translate"
             autocomplete="username"
             class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
           />
         </div>
         @if (form.get('username')?.hasError('required') && form.get('username')?.touched) {
-          <p class="text-red-500 text-xs mt-1">Username is required</p>
+          <p class="text-red-500 text-xs mt-1">{{ 'AUTH.ERRORS.USERNAME_REQUIRED' | translate }}</p>
         }
       </div>
 
       <!-- Password -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+        <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'AUTH.PASSWORD_LABEL' | translate }}</label>
         <div class="relative">
           <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
             <mat-icon class="text-lg leading-none">lock</mat-icon>
@@ -43,23 +57,20 @@
           <input
             formControlName="password"
             [type]="hidePassword ? 'password' : 'text'"
-            placeholder="Enter your password"
+            [placeholder]="'AUTH.PASSWORD_PLACEHOLDER' | translate"
             autocomplete="current-password"
             class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
           />
-          <button
-            type="button"
-            (click)="hidePassword = !hidePassword"
-            class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
-          >
+          <button type="button" (click)="hidePassword = !hidePassword"
+            class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600">
             <mat-icon class="text-lg">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
         </div>
         @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
-          <p class="text-red-500 text-xs mt-1">Password is required</p>
+          <p class="text-red-500 text-xs mt-1">{{ 'AUTH.ERRORS.PASSWORD_REQUIRED' | translate }}</p>
         }
         @if (form.get('password')?.hasError('minlength') && form.get('password')?.touched) {
-          <p class="text-red-500 text-xs mt-1">Password must be at least 4 characters</p>
+          <p class="text-red-500 text-xs mt-1">{{ 'AUTH.ERRORS.PASSWORD_MIN' | translate }}</p>
         }
       </div>
 
@@ -67,11 +78,11 @@
       @if (errorMessage()) {
         <div class="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
           <mat-icon class="text-base">error_outline</mat-icon>
-          <span>{{ errorMessage() }}</span>
+          <span>{{ errorMessage() | translate }}</span>
         </div>
       }
 
-      <!-- Submit Button -->
+      <!-- Submit -->
       <button
         type="submit"
         [disabled]="form.invalid || loading()"
@@ -80,14 +91,14 @@
         @if (loading()) {
           <mat-spinner diameter="20" class="[--mdc-circular-progress-active-indicator-color:white]" />
         } @else {
-          Sign In
+          {{ 'AUTH.SIGN_IN_BTN' | translate }}
         }
       </button>
 
       <!-- Register Link -->
       <p class="text-center text-sm text-gray-500">
-        Don't have an account?
-        <a routerLink="/register" class="text-indigo-600 font-medium hover:underline">Create one</a>
+        {{ 'AUTH.NO_ACCOUNT' | translate }}
+        <a routerLink="/register" class="text-indigo-600 font-medium hover:underline">{{ 'AUTH.CREATE_ONE' | translate }}</a>
       </p>
     </form>
   </div>

@@ -1,0 +1,59 @@
+{
+  "AUTH": {
+    "WELCOME_BACK": "Bienvenido de nuevo",
+    "SIGN_IN_SUBTITLE": "Inicia sesión en tu cuenta",
+    "CREATE_ACCOUNT_TITLE": "Crear cuenta",
+    "SIGN_UP_SUBTITLE": "Regístrate para comenzar",
+    "USERNAME_LABEL": "Usuario",
+    "USERNAME_PLACEHOLDER": "Ingresa tu usuario",
+    "USERNAME_PLACEHOLDER_CHOOSE": "Elige un usuario",
+    "PASSWORD_LABEL": "Contraseña",
+    "PASSWORD_PLACEHOLDER": "Ingresa tu contraseña",
+    "PASSWORD_PLACEHOLDER_CREATE": "Crea una contraseña",
+    "CONFIRM_PASSWORD_LABEL": "Confirmar contraseña",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "Repite tu contraseña",
+    "SIGN_IN_BTN": "Iniciar sesión",
+    "CREATE_ACCOUNT_BTN": "Crear cuenta",
+    "NO_ACCOUNT": "¿No tienes una cuenta?",
+    "CREATE_ONE": "Créala aquí",
+    "HAVE_ACCOUNT": "¿Ya tienes una cuenta?",
+    "SIGN_IN_LINK": "Inicia sesión",
+    "SUCCESS_REGISTERED": "¡Cuenta creada! Redirigiendo al inicio de sesión…",
+    "ERRORS": {
+      "USERNAME_REQUIRED": "El usuario es obligatorio",
+      "USERNAME_MIN": "El usuario debe tener al menos 3 caracteres",
+      "PASSWORD_REQUIRED": "La contraseña es obligatoria",
+      "PASSWORD_MIN": "La contraseña debe tener al menos 4 caracteres",
+      "PASSWORD_MISMATCH": "Las contraseñas no coinciden",
+      "INVALID_CREDENTIALS": "Usuario o contraseña incorrectos.",
+      "REGISTRATION_FAILED": "El registro falló. Prueba con otro usuario."
+    }
+  },
+  "NAV": {
+    "APP_NAME": "MiApp",
+    "HOME": "Inicio",
+    "ANALYTICS": "Analíticas",
+    "SETTINGS": "Configuración",
+    "LOGOUT": "Cerrar sesión"
+  },
+  "HEADER": {
+    "DASHBOARD": "Panel de control"
+  },
+  "HOME": {
+    "GREETING": "¡Buen día, {{name}}!",
+    "SUBTITLE": "Aquí está lo que pasa hoy.",
+    "RECENT_ACTIVITY": "Actividad reciente"
+  },
+  "STOCKS": {
+    "TITLE": "Bolsa de valores",
+    "SUBTITLE": "Ordenado por cambio en 24h — mayor ganancia primero",
+    "SEARCH_PLACEHOLDER": "Buscar símbolo o nombre…",
+    "REFRESH": "Actualizar",
+    "LOADING": "Cargando acciones…",
+    "ERROR": "Error al cargar acciones.",
+    "EMPTY": "Ninguna acción coincide con tu búsqueda"
+  },
+  "LANGUAGE": {
+    "LABEL": "Idioma"
+  }
+}

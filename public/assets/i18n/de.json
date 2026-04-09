@@ -1,0 +1,59 @@
+{
+  "AUTH": {
+    "WELCOME_BACK": "Willkommen zurück",
+    "SIGN_IN_SUBTITLE": "Melde dich bei deinem Konto an",
+    "CREATE_ACCOUNT_TITLE": "Konto erstellen",
+    "SIGN_UP_SUBTITLE": "Registriere dich, um zu starten",
+    "USERNAME_LABEL": "Benutzername",
+    "USERNAME_PLACEHOLDER": "Benutzername eingeben",
+    "USERNAME_PLACEHOLDER_CHOOSE": "Benutzername wählen",
+    "PASSWORD_LABEL": "Passwort",
+    "PASSWORD_PLACEHOLDER": "Passwort eingeben",
+    "PASSWORD_PLACEHOLDER_CREATE": "Passwort erstellen",
+    "CONFIRM_PASSWORD_LABEL": "Passwort bestätigen",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "Passwort wiederholen",
+    "SIGN_IN_BTN": "Anmelden",
+    "CREATE_ACCOUNT_BTN": "Konto erstellen",
+    "NO_ACCOUNT": "Noch kein Konto?",
+    "CREATE_ONE": "Jetzt erstellen",
+    "HAVE_ACCOUNT": "Bereits ein Konto?",
+    "SIGN_IN_LINK": "Anmelden",
+    "SUCCESS_REGISTERED": "Konto erstellt! Weiterleitung zur Anmeldung…",
+    "ERRORS": {
+      "USERNAME_REQUIRED": "Benutzername ist erforderlich",
+      "USERNAME_MIN": "Benutzername muss mindestens 3 Zeichen haben",
+      "PASSWORD_REQUIRED": "Passwort ist erforderlich",
+      "PASSWORD_MIN": "Passwort muss mindestens 4 Zeichen haben",
+      "PASSWORD_MISMATCH": "Passwörter stimmen nicht überein",
+      "INVALID_CREDENTIALS": "Ungültiger Benutzername oder Passwort.",
+      "REGISTRATION_FAILED": "Registrierung fehlgeschlagen. Versuche einen anderen Benutzernamen."
+    }
+  },
+  "NAV": {
+    "APP_NAME": "MeineApp",
+    "HOME": "Startseite",
+    "ANALYTICS": "Analysen",
+    "SETTINGS": "Einstellungen",
+    "LOGOUT": "Abmelden"
+  },
+  "HEADER": {
+    "DASHBOARD": "Dashboard"
+  },
+  "HOME": {
+    "GREETING": "Guten Tag, {{name}}!",
+    "SUBTITLE": "Hier ist, was heute passiert.",
+    "RECENT_ACTIVITY": "Letzte Aktivität"
+  },
+  "STOCKS": {
+    "TITLE": "Börse",
+    "SUBTITLE": "Sortiert nach 24h-Änderung — höchste Gewinne zuerst",
+    "SEARCH_PLACEHOLDER": "Symbol oder Name suchen…",
+    "REFRESH": "Aktualisieren",
+    "LOADING": "Aktien werden geladen…",
+    "ERROR": "Aktien konnten nicht geladen werden.",
+    "EMPTY": "Keine Aktien entsprechen deiner Suche"
+  },
+  "LANGUAGE": {
+    "LABEL": "Sprache"
+  }
+}

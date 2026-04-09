@@ -1,0 +1,59 @@
+{
+  "AUTH": {
+    "WELCOME_BACK": "Welcome Back",
+    "SIGN_IN_SUBTITLE": "Sign in to your account",
+    "CREATE_ACCOUNT_TITLE": "Create Account",
+    "SIGN_UP_SUBTITLE": "Sign up to get started",
+    "USERNAME_LABEL": "Username",
+    "USERNAME_PLACEHOLDER": "Enter your username",
+    "USERNAME_PLACEHOLDER_CHOOSE": "Choose a username",
+    "PASSWORD_LABEL": "Password",
+    "PASSWORD_PLACEHOLDER": "Enter your password",
+    "PASSWORD_PLACEHOLDER_CREATE": "Create a password",
+    "CONFIRM_PASSWORD_LABEL": "Confirm Password",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "Repeat your password",
+    "SIGN_IN_BTN": "Sign In",
+    "CREATE_ACCOUNT_BTN": "Create Account",
+    "NO_ACCOUNT": "Don't have an account?",
+    "CREATE_ONE": "Create one",
+    "HAVE_ACCOUNT": "Already have an account?",
+    "SIGN_IN_LINK": "Sign in",
+    "SUCCESS_REGISTERED": "Account created! Redirecting to login…",
+    "ERRORS": {
+      "USERNAME_REQUIRED": "Username is required",
+      "USERNAME_MIN": "Username must be at least 3 characters",
+      "PASSWORD_REQUIRED": "Password is required",
+      "PASSWORD_MIN": "Password must be at least 4 characters",
+      "PASSWORD_MISMATCH": "Passwords do not match",
+      "INVALID_CREDENTIALS": "Invalid username or password.",
+      "REGISTRATION_FAILED": "Registration failed. Try a different username."
+    }
+  },
+  "NAV": {
+    "APP_NAME": "MyApp",
+    "HOME": "Home",
+    "ANALYTICS": "Analytics",
+    "SETTINGS": "Settings",
+    "LOGOUT": "Logout"
+  },
+  "HEADER": {
+    "DASHBOARD": "Dashboard"
+  },
+  "HOME": {
+    "GREETING": "Good day, {{name}}!",
+    "SUBTITLE": "Here's what's happening today.",
+    "RECENT_ACTIVITY": "Recent Activity"
+  },
+  "STOCKS": {
+    "TITLE": "Stock Market",
+    "SUBTITLE": "Sorted by 24h change — highest gains first",
+    "SEARCH_PLACEHOLDER": "Search symbol or name…",
+    "REFRESH": "Refresh",
+    "LOADING": "Loading stocks…",
+    "ERROR": "Failed to load stocks.",
+    "EMPTY": "No stocks match your search"
+  },
+  "LANGUAGE": {
+    "LABEL": "Language"
+  }
+}

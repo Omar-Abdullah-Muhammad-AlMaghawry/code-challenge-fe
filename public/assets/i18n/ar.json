@@ -1,0 +1,59 @@
+{
+  "AUTH": {
+    "WELCOME_BACK": "مرحباً بعودتك",
+    "SIGN_IN_SUBTITLE": "سجّل الدخول إلى حسابك",
+    "CREATE_ACCOUNT_TITLE": "إنشاء حساب",
+    "SIGN_UP_SUBTITLE": "سجّل للبدء",
+    "USERNAME_LABEL": "اسم المستخدم",
+    "USERNAME_PLACEHOLDER": "أدخل اسم المستخدم",
+    "USERNAME_PLACEHOLDER_CHOOSE": "اختر اسم مستخدم",
+    "PASSWORD_LABEL": "كلمة المرور",
+    "PASSWORD_PLACEHOLDER": "أدخل كلمة المرور",
+    "PASSWORD_PLACEHOLDER_CREATE": "أنشئ كلمة مرور",
+    "CONFIRM_PASSWORD_LABEL": "تأكيد كلمة المرور",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "أعد كتابة كلمة المرور",
+    "SIGN_IN_BTN": "تسجيل الدخول",
+    "CREATE_ACCOUNT_BTN": "إنشاء الحساب",
+    "NO_ACCOUNT": "ليس لديك حساب؟",
+    "CREATE_ONE": "أنشئ حساباً",
+    "HAVE_ACCOUNT": "لديك حساب بالفعل؟",
+    "SIGN_IN_LINK": "تسجيل الدخول",
+    "SUCCESS_REGISTERED": "تم إنشاء الحساب! جارٍ التحويل…",
+    "ERRORS": {
+      "USERNAME_REQUIRED": "اسم المستخدم مطلوب",
+      "USERNAME_MIN": "يجب أن يكون اسم المستخدم 3 أحرف على الأقل",
+      "PASSWORD_REQUIRED": "كلمة المرور مطلوبة",
+      "PASSWORD_MIN": "يجب أن تكون كلمة المرور 4 أحرف على الأقل",
+      "PASSWORD_MISMATCH": "كلمتا المرور غير متطابقتين",
+      "INVALID_CREDENTIALS": "اسم المستخدم أو كلمة المرور غير صحيحة.",
+      "REGISTRATION_FAILED": "فشل التسجيل. جرّب اسم مستخدم آخر."
+    }
+  },
+  "NAV": {
+    "APP_NAME": "تطبيقي",
+    "HOME": "الرئيسية",
+    "ANALYTICS": "التحليلات",
+    "SETTINGS": "الإعدادات",
+    "LOGOUT": "تسجيل الخروج"
+  },
+  "HEADER": {
+    "DASHBOARD": "لوحة التحكم"
+  },
+  "HOME": {
+    "GREETING": "يوم سعيد، {{name}}!",
+    "SUBTITLE": "إليك ما يحدث اليوم.",
+    "RECENT_ACTIVITY": "النشاط الأخير"
+  },
+  "STOCKS": {
+    "TITLE": "سوق الأسهم",
+    "SUBTITLE": "مرتبة حسب التغيير خلال 24 ساعة — الأعلى ربحاً أولاً",
+    "SEARCH_PLACEHOLDER": "ابحث بالرمز أو الاسم…",
+    "REFRESH": "تحديث",
+    "LOADING": "جارٍ تحميل الأسهم…",
+    "ERROR": "فشل تحميل الأسهم.",
+    "EMPTY": "لا توجد أسهم تطابق بحثك"
+  },
+  "LANGUAGE": {
+    "LABEL": "اللغة"
+  }
+}

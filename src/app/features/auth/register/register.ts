@@ -5,6 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
+import { LanguageService } from '../../../core/services/language.service';
+import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password')?.value;
@@ -15,7 +17,7 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule, MatProgressSpinnerModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, MatIconModule, MatProgressSpinnerModule, TranslatePipe],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
@@ -23,6 +25,7 @@ export class Register {
   private fb          = inject(FormBuilder);
   private authService = inject(AuthService);
   private router      = inject(Router);
+  readonly langService = inject(LanguageService);
 
   form = this.fb.group(
     {
@@ -33,27 +36,24 @@ export class Register {
     { validators: passwordMatchValidator }
   );
 
-  hidePassword        = true;
-  hideConfirm         = true;
-  loading             = signal(false);
-  errorMessage        = signal('');
-  successMessage      = signal('');
+  hidePassword   = true;
+  hideConfirm    = true;
+  loading        = signal(false);
+  errorMessage   = signal('');
+  successMessage = signal('');
 
   onSubmit(): void {
     if (this.form.invalid) return;
-
     this.loading.set(true);
     this.errorMessage.set('');
-
     const { username, password } = this.form.value;
-
     this.authService.register(username!, password!).subscribe({
       next: () => {
-        this.successMessage.set('Account created! Redirecting to login…');
+        this.successMessage.set('AUTH.SUCCESS_REGISTERED');
         setTimeout(() => this.router.navigate(['/login']), 1500);
       },
-      error: (err: Error) => {
-        this.errorMessage.set(err.message === 'An unexpected error occurred' ? 'Registration failed. Try a different username.' : err.message);
+      error: () => {
+        this.errorMessage.set('AUTH.ERRORS.REGISTRATION_FAILED');
         this.loading.set(false);
       },
     });
