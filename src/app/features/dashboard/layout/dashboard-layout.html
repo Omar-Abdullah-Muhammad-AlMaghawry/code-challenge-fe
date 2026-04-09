@@ -1,0 +1,88 @@
+<div class="flex h-screen overflow-hidden bg-gray-100">
+
+  <!-- Sidebar -->
+  <aside
+    class="flex flex-col bg-indigo-900 text-white transition-all duration-300 ease-in-out shrink-0"
+    [class.w-64]="sidenavOpen()"
+    [class.w-0]="!sidenavOpen()"
+  >
+    <div class="overflow-hidden w-64">
+      <!-- Sidebar Header -->
+      <div class="flex items-center gap-3 px-5 py-5 border-b border-indigo-700">
+        <div class="w-9 h-9 rounded-lg bg-indigo-500 flex items-center justify-center shrink-0">
+          <mat-icon class="text-white text-xl">dashboard</mat-icon>
+        </div>
+        <span class="text-lg font-bold tracking-wide whitespace-nowrap">MyApp</span>
+      </div>
+
+      <!-- Nav Items -->
+      <nav class="flex-1 px-3 py-4 space-y-1">
+        @for (item of navItems; track item.route) {
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="bg-indigo-600 text-white"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="flex items-center gap-3 px-4 py-3 rounded-lg text-indigo-200 hover:bg-indigo-700 hover:text-white transition-colors whitespace-nowrap"
+          >
+            <mat-icon class="text-xl shrink-0">{{ item.icon }}</mat-icon>
+            <span class="text-sm font-medium">{{ item.label }}</span>
+          </a>
+        }
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="px-4 py-4 border-t border-indigo-700">
+        <button
+          (click)="logout()"
+          class="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-indigo-200 hover:bg-red-600 hover:text-white transition-colors"
+        >
+          <mat-icon class="text-xl shrink-0">logout</mat-icon>
+          <span class="text-sm font-medium whitespace-nowrap">Logout</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <div class="flex flex-col flex-1 overflow-hidden">
+
+    <!-- Top Navbar -->
+    <header class="flex items-center justify-between bg-white border-b border-gray-200 px-4 py-3 shadow-sm shrink-0">
+      <div class="flex items-center gap-3">
+        <button
+          (click)="toggleSidenav()"
+          class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+        >
+          <mat-icon>{{ sidenavOpen() ? 'menu_open' : 'menu' }}</mat-icon>
+        </button>
+        <h1 class="text-lg font-semibold text-gray-800">Dashboard</h1>
+      </div>
+
+      <!-- User Menu -->
+      <div class="flex items-center gap-2">
+        <button
+          [matMenuTriggerFor]="userMenu"
+          class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+        >
+          <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-semibold">
+            {{ username.charAt(0).toUpperCase() }}
+          </div>
+          <span class="text-sm font-medium text-gray-700 hidden sm:block">{{ username }}</span>
+          <mat-icon class="text-gray-400 text-base">expand_more</mat-icon>
+        </button>
+
+        <mat-menu #userMenu="matMenu">
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>Logout</span>
+          </button>
+        </mat-menu>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="flex-1 overflow-auto p-6">
+      <router-outlet />
+    </main>
+  </div>
+</div>

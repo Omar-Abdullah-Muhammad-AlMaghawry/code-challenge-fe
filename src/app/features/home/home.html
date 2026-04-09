@@ -1,0 +1,158 @@
+<div class="space-y-6">
+
+  <!-- Welcome Banner -->
+  <div class="bg-gradient-to-r from-indigo-600 to-blue-500 rounded-2xl p-6 text-white shadow-lg">
+    <h2 class="text-2xl font-bold mb-1">Good day, {{ username }}!</h2>
+    <p class="text-indigo-100 text-sm">Here's what's happening with your app today.</p>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+    @for (stat of stats(); track stat.label) {
+      <div class="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" [class]="stat.color">
+          <mat-icon class="text-white">{{ stat.icon }}</mat-icon>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-gray-800">{{ stat.value }}</p>
+          <p class="text-sm text-gray-500">{{ stat.label }}</p>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Stock Market Section -->
+  <div class="bg-white rounded-xl shadow-sm p-6">
+
+    <!-- Header + Controls -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800">Stock Market</h3>
+        <p class="text-xs text-gray-400 mt-0.5">Sorted by 24 h change — highest gains first</p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <!-- Search -->
+        <div class="relative">
+          <span class="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
+            <mat-icon class="text-base leading-none">search</mat-icon>
+          </span>
+          <input
+            type="text"
+            placeholder="Search symbol or name…"
+            [ngModel]="searchTerm"
+            (ngModelChange)="onSearch($event)"
+            class="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:w-52"
+          />
+        </div>
+
+        <!-- Market Filter -->
+        <div class="flex rounded-lg border border-gray-200 overflow-hidden text-sm font-medium">
+          @for (m of ['ALL','EGX','USA']; track m) {
+            <button
+              (click)="onMarket(m)"
+              [class.bg-indigo-600]="marketFilter === m"
+              [class.text-white]="marketFilter === m"
+              [class.text-gray-600]="marketFilter !== m"
+              class="px-4 py-2 hover:bg-indigo-50 transition-colors"
+            >{{ m }}</button>
+          }
+        </div>
+
+        <!-- Refresh -->
+        <button
+          (click)="loadStocks()"
+          class="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+        >
+          <mat-icon class="text-base leading-none">refresh</mat-icon>
+          <span>Refresh</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    @if (stocksLoading()) {
+      <div class="flex items-center justify-center py-16 text-gray-400 gap-3">
+        <mat-icon class="animate-spin">sync</mat-icon>
+        <span class="text-sm">Loading stocks…</span>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (!stocksLoading() && stocksError()) {
+      <div class="flex items-center gap-2 text-red-600 text-sm py-8 justify-center">
+        <mat-icon class="text-base">error_outline</mat-icon>
+        <span>{{ stocksError() }}</span>
+      </div>
+    }
+
+    <!-- Empty -->
+    @if (!stocksLoading() && !stocksError() && filteredStocks().length === 0) {
+      <div class="flex flex-col items-center gap-2 text-gray-400 py-12">
+        <mat-icon class="text-4xl">search_off</mat-icon>
+        <span class="text-sm">No stocks match your search</span>
+      </div>
+    }
+
+    <!-- Cards Grid -->
+    @if (!stocksLoading() && !stocksError() && filteredStocks().length > 0) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        @for (stock of filteredStocks(); track stock.symbol) {
+          <div class="rounded-xl border border-gray-100 p-4 hover:shadow-md transition-shadow bg-gray-50">
+
+            <!-- Top Row -->
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <span class="text-base font-bold text-gray-900">{{ stock.symbol }}</span>
+                <p class="text-xs text-gray-500 mt-0.5 leading-tight">{{ stock.name }}</p>
+              </div>
+              <span
+                class="text-xs font-semibold px-2 py-1 rounded-full"
+                [class.bg-indigo-100]="stock.market === 'USA'"
+                [class.text-indigo-700]="stock.market === 'USA'"
+                [class.bg-emerald-100]="stock.market === 'EGX'"
+                [class.text-emerald-700]="stock.market === 'EGX'"
+              >{{ stock.market }}</span>
+            </div>
+
+            <!-- Price -->
+            <p class="text-2xl font-bold text-gray-900 mb-2">${{ formatPrice(stock.price) }}</p>
+
+            <!-- Change -->
+            <div class="flex items-center gap-2">
+              <mat-icon
+                class="text-base leading-none"
+                [class.text-emerald-500]="stock.changePercent >= 0"
+                [class.text-red-500]="stock.changePercent < 0"
+              >{{ stock.changePercent >= 0 ? 'trending_up' : 'trending_down' }}</mat-icon>
+
+              <span
+                class="text-sm font-semibold"
+                [class.text-emerald-600]="stock.changePercent >= 0"
+                [class.text-red-600]="stock.changePercent < 0"
+              >
+                {{ stock.changePercent >= 0 ? '+' : '-' }}{{ absChange(stock.change) }}
+                ({{ stock.changePercent >= 0 ? '+' : '-' }}{{ absPercent(stock.changePercent) }}%)
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h3>
+    <div class="space-y-4">
+      @for (item of activity(); track item.text) {
+        <div class="flex items-center gap-4 py-2 border-b border-gray-100 last:border-0">
+          <mat-icon [class]="item.color">{{ item.icon }}</mat-icon>
+          <p class="flex-1 text-sm text-gray-700">{{ item.text }}</p>
+          <span class="text-xs text-gray-400 whitespace-nowrap">{{ item.time }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+</div>
