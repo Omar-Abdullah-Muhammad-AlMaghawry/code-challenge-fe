@@ -3,12 +3,12 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: false,
-  retries: 0,
-  reporter: 'list',
+  retries: process.env['CI'] ? 2 : 0,
+  reporter: process.env['CI'] ? 'github' : 'list',
 
   use: {
     baseURL: 'http://localhost:4200',
-    headless: false,
+    headless: true,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'off',
@@ -24,7 +24,7 @@ export default defineConfig({
   webServer: {
     command: 'npx ng serve',
     url: 'http://localhost:4200',
-    reuseExistingServer: true,
+    reuseExistingServer: !process.env['CI'],
     timeout: 120_000,
   },
 });
