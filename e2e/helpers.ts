@@ -1,6 +1,7 @@
 import { Page } from '@playwright/test';
 
-export const MOCK_TOKEN = 'mock-jwt-token-for-tests';
+// A real JWT with sub=testuser and exp=9999999999 (year 2286) — passes the client-side expiry check
+export const MOCK_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImV4cCI6OTk5OTk5OTk5OX0.ZmFrZXNpZ25hdHVyZQ';
 export const MOCK_USER  = 'testuser';
 
 export const STATS_MOCK = [
@@ -65,21 +66,25 @@ export async function mockRegisterFailure(page: Page): Promise<void> {
 }
 
 /**
- * Inject auth state into localStorage BEFORE page load so the auth guard passes.
- * Uses addInitScript — runs on every navigation for this page instance.
+ * Inject auth state into localStorage BEFORE the FIRST page load so the auth guard passes.
+ * Uses a one-shot flag so the script doesn't re-inject after the user logs out.
  */
 export async function setAuthState(page: Page, username = MOCK_USER): Promise<void> {
   await page.addInitScript(({ token, user }) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user',  user);
+    // Only inject on the very first navigation of this test (flag not yet set).
+    // After logout the flag persists so subsequent page.goto() calls don't restore the token.
+    if (!localStorage.getItem('_authInjected')) {
+      localStorage.setItem('token', token);
+      localStorage.setItem('user',  user);
+      localStorage.setItem('_authInjected', '1');
+    }
   }, { token: MOCK_TOKEN, user: username });
 }
 
-/** Clear auth tokens before navigation. */
+/** Clear auth tokens before navigation (does NOT clear lang so language-persistence tests work). */
 export async function clearAuthState(page: Page): Promise<void> {
   await page.addInitScript(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    localStorage.removeItem('lang');
   });
 }

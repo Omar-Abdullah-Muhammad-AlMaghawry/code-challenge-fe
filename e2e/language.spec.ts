@@ -44,7 +44,7 @@ test.describe('Language switching - auth pages', () => {
   test('should translate the register page', async ({ page }) => {
     await page.goto('/register');
     await page.selectOption('select', 'de');
-    await expect(page.getByText('Konto erstellen')).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole('heading', { name: 'Konto erstellen' })).toBeVisible({ timeout: 5000 });
   });
 
   test('should persist language across navigation', async ({ page }) => {

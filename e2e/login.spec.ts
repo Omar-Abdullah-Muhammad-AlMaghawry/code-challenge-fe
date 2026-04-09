@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { clearAuthState, mockLoginSuccess, mockLoginFailure } from './helpers';
+import { clearAuthState, mockLoginSuccess, mockLoginFailure, MOCK_TOKEN } from './helpers';
 
 test.describe('Login Page', () => {
 
@@ -96,10 +96,11 @@ test.describe('Login Page', () => {
   });
 
   test('should stay on /dashboard if already logged in', async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem('token', 'existing-token');
+    const validToken = MOCK_TOKEN;
+    await page.addInitScript((token) => {
+      localStorage.setItem('token', token);
       localStorage.setItem('user',  'existinguser');
-    });
+    }, validToken);
     await page.goto('/dashboard');
     await expect(page).toHaveURL(/dashboard/);
   });

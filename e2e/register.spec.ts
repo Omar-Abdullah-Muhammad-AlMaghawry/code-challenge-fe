@@ -11,7 +11,7 @@ test.describe('Register Page', () => {
   // ── Rendering ────────────────────────────────────────────────────────────────
 
   test('should display the register form', async ({ page }) => {
-    await expect(page.getByText('Create Account')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Create Account' })).toBeVisible();
     await expect(page.getByText('Sign up to get started')).toBeVisible();
     await expect(page.getByPlaceholder('Choose a username')).toBeVisible();
     await expect(page.getByPlaceholder('Create a password')).toBeVisible();
