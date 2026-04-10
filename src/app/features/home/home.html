@@ -111,9 +111,9 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           @for (stock of filteredStocks(); track stock.symbol) {
 
-            <!-- Card: top border is green for gainers, red for losers -->
+            <!-- Card: colored top bar + sparkline graph -->
             <div
-              class="relative rounded-xl border bg-white p-4 hover:shadow-lg transition-all duration-200 overflow-hidden group"
+              class="relative rounded-xl border bg-white p-4 hover:shadow-lg transition-all duration-200 overflow-hidden"
               [class.border-emerald-200]="stock.changePercent >= 0"
               [class.border-red-200]="stock.changePercent < 0"
             >
@@ -124,14 +124,14 @@
                 [class.bg-red-500]="stock.changePercent < 0"
               ></div>
 
-              <!-- Top row: symbol + market badge -->
+              <!-- Symbol + market badge -->
               <div class="flex items-start justify-between mb-2 mt-1">
-                <div>
-                  <span class="text-base font-extrabold text-slate-900 tracking-tight">{{ stock.symbol }}</span>
-                  <p class="text-xs text-slate-400 mt-0.5 leading-tight truncate max-w-[120px]">{{ stock.name }}</p>
+                <div class="min-w-0">
+                  <span class="text-sm font-extrabold text-slate-900 tracking-tight">{{ stock.symbol }}</span>
+                  <p class="text-xs text-slate-400 mt-0.5 truncate">{{ stock.name }}</p>
                 </div>
                 <span
-                  class="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
+                  class="text-xs font-bold px-2 py-0.5 rounded-full shrink-0 ml-2"
                   [class.bg-indigo-100]="stock.market === 'USA'"
                   [class.text-indigo-700]="stock.market === 'USA'"
                   [class.bg-amber-100]="stock.market === 'EGX'"
@@ -140,9 +140,44 @@
               </div>
 
               <!-- Price -->
-              <p class="text-2xl font-bold text-slate-900 mb-2 tracking-tight">
+              <p class="text-xl font-bold text-slate-900 tracking-tight">
                 {{ stock.market === 'EGX' ? 'E£' : '$' }}{{ formatPrice(stock.price) }}
               </p>
+
+              <!-- Sparkline graph -->
+              <svg viewBox="0 0 80 30" class="w-full h-10 my-1" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient [id]="'g-' + stock.symbol" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"
+                      [attr.stop-color]="stock.changePercent >= 0 ? '#10b981' : '#ef4444'"
+                      stop-opacity="0.25"/>
+                    <stop offset="100%"
+                      [attr.stop-color]="stock.changePercent >= 0 ? '#10b981' : '#ef4444'"
+                      stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <!-- Shaded area -->
+                <path
+                  [attr.d]="sparklineArea(stock)"
+                  [attr.fill]="'url(#g-' + stock.symbol + ')'"
+                />
+                <!-- Line -->
+                <path
+                  [attr.d]="sparklinePath(stock)"
+                  fill="none"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  [attr.stroke]="stock.changePercent >= 0 ? '#10b981' : '#ef4444'"
+                />
+                <!-- Endpoint dot -->
+                <circle
+                  cx="80"
+                  [attr.cy]="sparklineEndY(stock)"
+                  r="2.5"
+                  [attr.fill]="stock.changePercent >= 0 ? '#10b981' : '#ef4444'"
+                />
+              </svg>
 
               <!-- Change badge -->
               <div
@@ -152,7 +187,7 @@
                 [class.bg-red-100]="stock.changePercent < 0"
                 [class.text-red-700]="stock.changePercent < 0"
               >
-                <mat-icon class="leading-none" style="font-size:13px;width:13px;height:13px">
+                <mat-icon class="leading-none" style="font-size:12px;width:12px;height:12px">
                   {{ stock.changePercent >= 0 ? 'arrow_upward' : 'arrow_downward' }}
                 </mat-icon>
                 {{ stock.changePercent >= 0 ? '+' : '-' }}{{ absChange(stock.change) }}

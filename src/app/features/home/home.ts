@@ -57,4 +57,49 @@ export class Home {
   formatPrice(n: number):   string { return n.toFixed(2); }
   absChange(n: number):     string { return Math.abs(n).toFixed(2); }
   absPercent(n: number):    string { return Math.abs(n).toFixed(2); }
+
+  // ── Sparkline helpers ──────────────────────────────────────────────────────
+
+  /** SVG line path for the sparkline (M x,y L x,y …). */
+  sparklinePath(stock: Stock): string {
+    const pts = this.sparklinePoints(stock);
+    return 'M ' + pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' L ');
+  }
+
+  /** Closed SVG path for the shaded area under the sparkline. */
+  sparklineArea(stock: Stock): string {
+    const pts = this.sparklinePoints(stock);
+    const last = pts[pts.length - 1];
+    const linePart = pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' L ');
+    return `M ${linePart} L ${last[0].toFixed(1)},30 L 0,30 Z`;
+  }
+
+  /** Y-coordinate of the final point (for the endpoint dot). */
+  sparklineEndY(stock: Stock): number {
+    const pts = this.sparklinePoints(stock);
+    return pts[pts.length - 1][1];
+  }
+
+  /** Generates 8 deterministic points for a 80×30 viewport. */
+  private sparklinePoints(stock: Stock): [number, number][] {
+    // Seed from symbol so the same stock always gets the same shape
+    const seed = stock.symbol.split('').reduce((s, c, i) => s + c.charCodeAt(0) * (i + 1), 0);
+    const rand = (i: number) => (Math.abs(Math.sin(seed * 9301 + i * 49297 + 233995)) % 1);
+
+    const n = 8;
+    const W = 80, H = 30, pad = 3;
+    const up = stock.changePercent >= 0;
+    // Stronger trend for bigger movers (capped at 0.75 of height)
+    const strength = Math.min(Math.abs(stock.changePercent) / 8, 0.75);
+
+    return Array.from({ length: n }, (_, i): [number, number] => {
+      const t  = i / (n - 1);
+      const x  = t * W;
+      // Trend: up → y decreases left→right; down → y increases
+      const trend  = (up ? (1 - t) : t) * (H - pad * 2) * strength;
+      const noise  = rand(i) * (H - pad * 2) * 0.28;
+      const y = Math.max(pad, Math.min(H - pad, pad + (H - pad * 2) * 0.2 + trend + noise));
+      return [x, y];
+    });
+  }
 }
