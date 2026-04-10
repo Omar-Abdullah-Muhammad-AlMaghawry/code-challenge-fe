@@ -1,40 +1,46 @@
 <div class="space-y-6">
 
   <!-- Welcome Banner -->
-  <div class="bg-gradient-to-r from-indigo-600 to-blue-500 rounded-2xl p-6 text-white shadow-lg">
-    <h2 class="text-2xl font-bold mb-1">{{ 'HOME.GREETING' | translate: { name: username } }}</h2>
-    <p class="text-indigo-100 text-sm">{{ 'HOME.SUBTITLE' | translate }}</p>
+  <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-700 rounded-2xl p-6 shadow-lg">
+    <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+    <div class="absolute bottom-0 left-1/4 w-40 h-40 bg-violet-400/10 rounded-full translate-y-1/2 pointer-events-none"></div>
+    <div class="relative">
+      <p class="text-indigo-200 text-sm font-medium mb-1">{{ 'HOME.SUBTITLE' | translate }}</p>
+      <h2 class="text-2xl font-bold text-white">{{ 'HOME.GREETING' | translate: { name: username } }}</h2>
+    </div>
   </div>
 
   <!-- Stats Grid -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-    @for (stat of stats(); track stat.label) {
-      <div class="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" [class]="stat.color">
-          <mat-icon class="text-white">{{ stat.icon }}</mat-icon>
+  @if (stats().length > 0) {
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      @for (stat of stats(); track stat.label) {
+        <div class="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 hover:shadow-md transition-shadow border border-slate-100">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" [class]="stat.color">
+            <mat-icon class="text-white">{{ stat.icon }}</mat-icon>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-slate-800">{{ stat.value }}</p>
+            <p class="text-xs text-slate-500 font-medium">{{ stat.label }}</p>
+          </div>
         </div>
-        <div>
-          <p class="text-2xl font-bold text-gray-800">{{ stat.value }}</p>
-          <p class="text-sm text-gray-500">{{ stat.label }}</p>
-        </div>
-      </div>
-    }
-  </div>
+      }
+    </div>
+  }
 
   <!-- Stock Market Section -->
-  <div class="bg-white rounded-xl shadow-sm p-6">
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
 
-    <!-- Header + Controls -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+    <!-- Section Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 py-5 border-b border-slate-100">
       <div>
-        <h3 class="text-lg font-semibold text-gray-800">{{ 'STOCKS.TITLE' | translate }}</h3>
-        <p class="text-xs text-gray-400 mt-0.5">{{ 'STOCKS.SUBTITLE' | translate }}</p>
+        <h3 class="text-base font-bold text-slate-800">{{ 'STOCKS.TITLE' | translate }}</h3>
+        <p class="text-xs text-slate-400 mt-0.5">{{ 'STOCKS.SUBTITLE' | translate }}</p>
       </div>
 
-      <div class="flex flex-col sm:flex-row gap-3">
+      <div class="flex flex-wrap gap-2">
         <!-- Search -->
         <div class="relative">
-          <span class="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
+          <span class="absolute inset-y-0 left-3 flex items-center text-slate-400 pointer-events-none">
             <mat-icon class="text-base leading-none">search</mat-icon>
           </span>
           <input
@@ -42,19 +48,20 @@
             [placeholder]="'STOCKS.SEARCH_PLACEHOLDER' | translate"
             [value]="searchTerm()"
             (input)="searchTerm.set($any($event.target).value)"
-            class="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 w-full sm:w-52"
+            class="pl-9 pr-4 py-2 border border-slate-200 bg-slate-50 rounded-xl text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:bg-white w-full sm:w-48 transition"
           />
         </div>
 
-        <!-- Market Filter -->
-        <div class="flex rounded-lg border border-gray-200 overflow-hidden text-sm font-medium">
+        <!-- Market Tabs -->
+        <div class="flex rounded-xl border border-slate-200 overflow-hidden text-xs font-semibold bg-slate-50">
           @for (m of ['ALL','EGX','USA']; track m) {
             <button
               (click)="marketFilter.set(m)"
               [class.bg-indigo-600]="marketFilter() === m"
               [class.text-white]="marketFilter() === m"
-              [class.text-gray-600]="marketFilter() !== m"
-              class="px-4 py-2 hover:bg-indigo-50 transition-colors"
+              [class.shadow-sm]="marketFilter() === m"
+              [class.text-slate-500]="marketFilter() !== m"
+              class="px-4 py-2 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
             >{{ m }}</button>
           }
         </div>
@@ -62,7 +69,7 @@
         <!-- Refresh -->
         <button
           (click)="loadStocks()"
-          class="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+          class="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-medium text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition-colors"
         >
           <mat-icon class="text-base leading-none">refresh</mat-icon>
           <span>{{ 'STOCKS.REFRESH' | translate }}</span>
@@ -70,85 +77,105 @@
       </div>
     </div>
 
-    <!-- Loading -->
-    @if (stocksLoading()) {
-      <div class="flex items-center justify-center py-16 text-gray-400 gap-3">
-        <mat-icon class="animate-spin">sync</mat-icon>
-        <span class="text-sm">{{ 'STOCKS.LOADING' | translate }}</span>
-      </div>
-    }
+    <div class="p-6">
 
-    <!-- Error -->
-    @if (!stocksLoading() && stocksError()) {
-      <div class="flex items-center gap-2 text-red-600 text-sm py-8 justify-center">
-        <mat-icon class="text-base">error_outline</mat-icon>
-        <span>{{ stocksError() | translate }}</span>
-      </div>
-    }
+      <!-- Loading -->
+      @if (stocksLoading()) {
+        <div class="flex items-center justify-center py-16 text-slate-400 gap-3">
+          <mat-icon class="animate-spin text-indigo-400">sync</mat-icon>
+          <span class="text-sm">{{ 'STOCKS.LOADING' | translate }}</span>
+        </div>
+      }
 
-    <!-- Empty -->
-    @if (!stocksLoading() && !stocksError() && filteredStocks().length === 0) {
-      <div class="flex flex-col items-center gap-2 text-gray-400 py-12">
-        <mat-icon class="text-4xl">search_off</mat-icon>
-        <span class="text-sm">{{ 'STOCKS.EMPTY' | translate }}</span>
-      </div>
-    }
-
-    <!-- Cards Grid -->
-    @if (!stocksLoading() && !stocksError() && filteredStocks().length > 0) {
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        @for (stock of filteredStocks(); track stock.symbol) {
-          <div class="rounded-xl border border-gray-100 p-4 hover:shadow-md transition-shadow bg-gray-50">
-
-            <!-- Top Row -->
-            <div class="flex items-start justify-between mb-3">
-              <div>
-                <span class="text-base font-bold text-gray-900">{{ stock.symbol }}</span>
-                <p class="text-xs text-gray-500 mt-0.5 leading-tight">{{ stock.name }}</p>
-              </div>
-              <span
-                class="text-xs font-semibold px-2 py-1 rounded-full"
-                [class.bg-indigo-100]="stock.market === 'USA'"
-                [class.text-indigo-700]="stock.market === 'USA'"
-                [class.bg-emerald-100]="stock.market === 'EGX'"
-                [class.text-emerald-700]="stock.market === 'EGX'"
-              >{{ stock.market }}</span>
-            </div>
-
-            <!-- Price -->
-            <p class="text-2xl font-bold text-gray-900 mb-2">${{ formatPrice(stock.price) }}</p>
-
-            <!-- Change -->
-            <div class="flex items-center gap-2">
-              <mat-icon
-                class="text-base leading-none"
-                [class.text-emerald-500]="stock.changePercent >= 0"
-                [class.text-red-500]="stock.changePercent < 0"
-              >{{ stock.changePercent >= 0 ? 'trending_up' : 'trending_down' }}</mat-icon>
-              <span
-                class="text-sm font-semibold"
-                [class.text-emerald-600]="stock.changePercent >= 0"
-                [class.text-red-600]="stock.changePercent < 0"
-              >
-                {{ stock.changePercent >= 0 ? '+' : '-' }}{{ absChange(stock.change) }}
-                ({{ stock.changePercent >= 0 ? '+' : '-' }}{{ absPercent(stock.changePercent) }}%)
-              </span>
-            </div>
+      <!-- Error -->
+      @if (!stocksLoading() && stocksError()) {
+        <div class="flex flex-col items-center gap-3 py-12 text-center">
+          <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+            <mat-icon class="text-red-500">wifi_off</mat-icon>
           </div>
-        }
-      </div>
-    }
+          <p class="text-sm font-medium text-slate-600">{{ stocksError() | translate }}</p>
+          <button (click)="loadStocks()" class="text-xs text-indigo-500 hover:underline">Try again</button>
+        </div>
+      }
+
+      <!-- Empty -->
+      @if (!stocksLoading() && !stocksError() && filteredStocks().length === 0) {
+        <div class="flex flex-col items-center gap-3 py-12 text-slate-400">
+          <mat-icon class="text-4xl">search_off</mat-icon>
+          <p class="text-sm">{{ 'STOCKS.EMPTY' | translate }}</p>
+        </div>
+      }
+
+      <!-- Stock Cards Grid -->
+      @if (!stocksLoading() && !stocksError() && filteredStocks().length > 0) {
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          @for (stock of filteredStocks(); track stock.symbol) {
+
+            <!-- Card: top border is green for gainers, red for losers -->
+            <div
+              class="relative rounded-xl border bg-white p-4 hover:shadow-lg transition-all duration-200 overflow-hidden group"
+              [class.border-emerald-200]="stock.changePercent >= 0"
+              [class.border-red-200]="stock.changePercent < 0"
+            >
+              <!-- Colored top accent bar -->
+              <div
+                class="absolute top-0 left-0 right-0 h-1 rounded-t-xl"
+                [class.bg-emerald-500]="stock.changePercent >= 0"
+                [class.bg-red-500]="stock.changePercent < 0"
+              ></div>
+
+              <!-- Top row: symbol + market badge -->
+              <div class="flex items-start justify-between mb-2 mt-1">
+                <div>
+                  <span class="text-base font-extrabold text-slate-900 tracking-tight">{{ stock.symbol }}</span>
+                  <p class="text-xs text-slate-400 mt-0.5 leading-tight truncate max-w-[120px]">{{ stock.name }}</p>
+                </div>
+                <span
+                  class="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
+                  [class.bg-indigo-100]="stock.market === 'USA'"
+                  [class.text-indigo-700]="stock.market === 'USA'"
+                  [class.bg-amber-100]="stock.market === 'EGX'"
+                  [class.text-amber-700]="stock.market === 'EGX'"
+                >{{ stock.market }}</span>
+              </div>
+
+              <!-- Price -->
+              <p class="text-2xl font-bold text-slate-900 mb-2 tracking-tight">
+                {{ stock.market === 'EGX' ? 'E£' : '$' }}{{ formatPrice(stock.price) }}
+              </p>
+
+              <!-- Change badge -->
+              <div
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold"
+                [class.bg-emerald-100]="stock.changePercent >= 0"
+                [class.text-emerald-700]="stock.changePercent >= 0"
+                [class.bg-red-100]="stock.changePercent < 0"
+                [class.text-red-700]="stock.changePercent < 0"
+              >
+                <mat-icon class="leading-none" style="font-size:13px;width:13px;height:13px">
+                  {{ stock.changePercent >= 0 ? 'arrow_upward' : 'arrow_downward' }}
+                </mat-icon>
+                {{ stock.changePercent >= 0 ? '+' : '-' }}{{ absChange(stock.change) }}
+                &nbsp;({{ stock.changePercent >= 0 ? '+' : '-' }}{{ absPercent(stock.changePercent) }}%)
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
   </div>
 
   <!-- Recent Activity -->
-  <div class="bg-white rounded-xl shadow-sm p-6">
-    <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ 'HOME.RECENT_ACTIVITY' | translate }}</h3>
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+    <h3 class="text-base font-bold text-slate-800 mb-5">{{ 'HOME.RECENT_ACTIVITY' | translate }}</h3>
     <div class="space-y-4">
       @for (item of activity(); track item.text) {
-        <div class="flex items-center gap-4 py-2 border-b border-gray-100 last:border-0">
-          <mat-icon [class]="item.color">{{ item.icon }}</mat-icon>
-          <p class="flex-1 text-sm text-gray-700">{{ item.text }}</p>
-          <span class="text-xs text-gray-400 whitespace-nowrap">{{ item.time }}</span>
+        <div class="flex items-center gap-4 py-3 border-b border-slate-50 last:border-0 hover:bg-slate-50 rounded-lg px-2 transition-colors">
+          <div class="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
+            <mat-icon class="text-base" [class]="item.color">{{ item.icon }}</mat-icon>
+          </div>
+          <p class="flex-1 text-sm text-slate-700 font-medium">{{ item.text }}</p>
+          <span class="text-xs text-slate-400 whitespace-nowrap bg-slate-100 px-2 py-1 rounded-full">{{ item.time }}</span>
         </div>
       }
     </div>

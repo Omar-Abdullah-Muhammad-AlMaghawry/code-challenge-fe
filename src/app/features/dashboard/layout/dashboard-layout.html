@@ -1,103 +1,102 @@
-<div class="flex h-screen overflow-hidden bg-gray-100">
+<div class="flex h-screen overflow-hidden bg-slate-100">
 
   <!-- Sidebar -->
   <aside
-    class="flex flex-col bg-indigo-900 text-white transition-all duration-300 ease-in-out shrink-0"
+    class="flex flex-col bg-slate-900 text-white transition-all duration-300 ease-in-out shrink-0 shadow-xl"
     [class.w-64]="sidenavOpen()"
     [class.w-0]="!sidenavOpen()"
   >
-    <div class="overflow-hidden w-64">
+    <div class="overflow-hidden w-64 flex flex-col h-full">
 
-      <!-- Sidebar Header -->
-      <div class="flex items-center gap-3 px-5 py-5 border-b border-indigo-700">
-        <div class="w-9 h-9 rounded-lg bg-indigo-500 flex items-center justify-center shrink-0">
-          <mat-icon class="text-white text-xl">dashboard</mat-icon>
+      <!-- Logo -->
+      <div class="flex items-center gap-3 px-5 py-5 border-b border-slate-700/60">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/30">
+          <mat-icon class="text-white" style="font-size:18px;width:18px;height:18px">bar_chart</mat-icon>
         </div>
-        <span class="text-lg font-bold tracking-wide whitespace-nowrap">{{ 'NAV.APP_NAME' | translate }}</span>
+        <span class="text-base font-bold tracking-wide whitespace-nowrap bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+          {{ 'NAV.APP_NAME' | translate }}
+        </span>
       </div>
 
-      <!-- Nav Items -->
-      <nav class="flex-1 px-3 py-4 space-y-1">
+      <!-- Nav -->
+      <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         @for (item of navItems; track item.route) {
           <a
             [routerLink]="item.route"
-            routerLinkActive="bg-indigo-600 text-white"
+            routerLinkActive="bg-indigo-600/20 text-indigo-300 border-l-2 border-indigo-400"
             [routerLinkActiveOptions]="{ exact: true }"
-            class="flex items-center gap-3 px-4 py-3 rounded-lg text-indigo-200 hover:bg-indigo-700 hover:text-white transition-colors whitespace-nowrap"
+            class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-all duration-150 whitespace-nowrap group border-l-2 border-transparent"
           >
-            <mat-icon class="text-xl shrink-0">{{ item.icon }}</mat-icon>
+            <mat-icon class="text-xl shrink-0 group-hover:text-indigo-400 transition-colors">{{ item.icon }}</mat-icon>
             <span class="text-sm font-medium">{{ item.label | translate }}</span>
           </a>
         }
       </nav>
 
-      <!-- Sidebar Footer -->
-      <div class="px-4 py-4 border-t border-indigo-700">
+      <!-- User & Logout -->
+      <div class="px-3 py-4 border-t border-slate-700/60 space-y-1">
         <button
           (click)="logout()"
-          class="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-indigo-200 hover:bg-red-600 hover:text-white transition-colors"
+          class="flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-150 group border-l-2 border-transparent"
         >
-          <mat-icon class="text-xl shrink-0">logout</mat-icon>
+          <mat-icon class="text-xl shrink-0 group-hover:text-red-400 transition-colors">logout</mat-icon>
           <span class="text-sm font-medium whitespace-nowrap">{{ 'NAV.LOGOUT' | translate }}</span>
         </button>
       </div>
     </div>
   </aside>
 
-  <!-- Main Content Area -->
+  <!-- Main -->
   <div class="flex flex-col flex-1 overflow-hidden">
 
     <!-- Top Navbar -->
-    <header class="flex items-center justify-between bg-white border-b border-gray-200 px-4 py-3 shadow-sm shrink-0">
+    <header class="flex items-center justify-between bg-white border-b border-slate-200 px-5 py-3 shadow-sm shrink-0">
       <div class="flex items-center gap-3">
         <button
           (click)="toggleSidenav()"
-          class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+          class="p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"
         >
           <mat-icon>{{ sidenavOpen() ? 'menu_open' : 'menu' }}</mat-icon>
         </button>
-        <h1 class="text-lg font-semibold text-gray-800">{{ 'HEADER.DASHBOARD' | translate }}</h1>
+        <h1 class="text-base font-semibold text-slate-800">{{ 'HEADER.DASHBOARD' | translate }}</h1>
       </div>
 
       <div class="flex items-center gap-3">
 
         <!-- Language Selector -->
-        <div class="flex items-center gap-1.5">
-          <mat-icon class="text-gray-400 text-base leading-none">language</mat-icon>
-          <select
-            [value]="langService.currentLang()"
-            (change)="langService.setLanguage($any($event.target).value)"
-            class="text-sm border border-gray-200 rounded-lg px-2 py-1.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer bg-white"
-          >
-            @for (lang of langService.languages; track lang.code) {
-              <option [value]="lang.code">{{ lang.label }}</option>
-            }
-          </select>
-        </div>
+        <select
+          [value]="langService.currentLang()"
+          (change)="langService.setLanguage($any($event.target).value)"
+          class="text-xs border border-slate-200 bg-slate-50 rounded-lg px-2.5 py-1.5 text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer"
+        >
+          @for (lang of langService.languages; track lang.code) {
+            <option [value]="lang.code">{{ lang.label }}</option>
+          }
+        </select>
 
         <!-- User Menu -->
         <button
           [matMenuTriggerFor]="userMenu"
-          class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+          class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors"
         >
-          <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-semibold">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-sm font-bold shadow-sm">
             {{ username.charAt(0).toUpperCase() }}
           </div>
-          <span class="text-sm font-medium text-gray-700 hidden sm:block">{{ username }}</span>
-          <mat-icon class="text-gray-400 text-base">expand_more</mat-icon>
+          <span class="text-sm font-medium text-slate-700 hidden sm:block">{{ username }}</span>
+          <mat-icon class="text-slate-400 text-base">expand_more</mat-icon>
         </button>
 
-        <mat-menu #userMenu="matMenu">
+        <mat-menu #userMenu="matMenu" class="mt-1">
           <button mat-menu-item (click)="logout()">
-            <mat-icon>logout</mat-icon>
-            <span>{{ 'NAV.LOGOUT' | translate }}</span>
+            <mat-icon class="text-red-500">logout</mat-icon>
+            <span class="text-red-600 font-medium">{{ 'NAV.LOGOUT' | translate }}</span>
           </button>
         </mat-menu>
       </div>
     </header>
 
     <!-- Page Content -->
-    <main class="flex-1 overflow-auto p-6">
+    <main class="flex-1 overflow-auto p-6 bg-slate-100">
       <router-outlet />
     </main>
   </div>
