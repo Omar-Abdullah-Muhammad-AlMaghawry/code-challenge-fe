@@ -1,9 +1,11 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, OnDestroy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../core/services/auth.service';
 import { StockService, Stock } from '../../core/services/stock.service';
 import { DashboardService, Stat, Activity } from '../../core/services/dashboard.service';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { StockDetailModal } from './stock-detail-modal/stock-detail-modal';
 
 @Component({
   selector: 'app-home',
@@ -12,12 +14,19 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export class Home {
+export class Home implements OnDestroy {
   private authService      = inject(AuthService);
   private stockService     = inject(StockService);
   private dashboardService = inject(DashboardService);
+  private dialog           = inject(MatDialog);
 
   username = this.authService.getUser();
+
+  readonly marketTabs = [
+    { value: 'ALL', labelKey: 'STOCKS.FILTER_ALL' },
+    { value: 'USA', labelKey: 'STOCKS.FILTER_USA' },
+    { value: 'EGX', labelKey: 'STOCKS.FILTER_EGX' },
+  ];
 
   stats        = signal<Stat[]>([]);
   activity     = signal<Activity[]>([]);
@@ -39,10 +48,17 @@ export class Home {
     });
   });
 
+  private refreshInterval: ReturnType<typeof setInterval> | null = null;
+
   ngOnInit(): void {
     this.dashboardService.getStats().subscribe(data => this.stats.set(data));
     this.dashboardService.getActivity().subscribe(data => this.activity.set(data));
     this.loadStocks();
+    this.refreshInterval = setInterval(() => this.loadStocks(), 5 * 60 * 1000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshInterval) clearInterval(this.refreshInterval);
   }
 
   loadStocks(): void {
@@ -57,6 +73,15 @@ export class Home {
   formatPrice(n: number):   string { return n.toFixed(2); }
   absChange(n: number):     string { return Math.abs(n).toFixed(2); }
   absPercent(n: number):    string { return Math.abs(n).toFixed(2); }
+
+  openDetail(stock: Stock): void {
+    this.dialog.open(StockDetailModal, {
+      data: stock,
+      panelClass: 'stock-detail-panel',
+      maxWidth: '700px',
+      width: '90vw',
+    });
+  }
 
   // ── Sparkline helpers ──────────────────────────────────────────────────────
 

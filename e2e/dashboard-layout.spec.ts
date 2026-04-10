@@ -34,9 +34,12 @@ test.describe('Dashboard Layout - authenticated', () => {
   });
 
   test('should show the language selector in the toolbar', async ({ page }) => {
-    const langSelect = page.locator('header select');
-    await expect(langSelect).toBeVisible();
-    await expect(langSelect.locator('option')).toHaveCount(4);
+    const langBtn = page.locator('header button:has(mat-icon:text("language"))');
+    await expect(langBtn).toBeVisible();
+    await langBtn.click();
+    await expect(page.getByRole('menu')).toBeVisible();
+    await expect(page.getByRole('menuitem')).toHaveCount(4);
+    await page.keyboard.press('Escape');
   });
 
   test('should collapse sidebar when hamburger is clicked', async ({ page }) => {

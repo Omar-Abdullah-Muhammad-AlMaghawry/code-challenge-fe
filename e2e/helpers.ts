@@ -19,11 +19,11 @@ export const ACTIVITY_MOCK = [
 ];
 
 export const STOCKS_MOCK = [
-  { symbol: 'AAPL',  name: 'Apple Inc.',             price: 170.50, change:  2.30, changePercent:  1.37, market: 'USA' },
-  { symbol: 'GOOGL', name: 'Alphabet Inc.',           price: 140.20, change: -1.50, changePercent: -1.06, market: 'USA' },
-  { symbol: 'MSFT',  name: 'Microsoft Corporation',   price: 415.30, change:  5.10, changePercent:  1.24, market: 'USA' },
-  { symbol: 'COMI',  name: 'Commercial Intl Bank',    price:  70.25, change:  1.10, changePercent:  1.59, market: 'EGX' },
-  { symbol: 'HRHO',  name: 'Hermes',                  price:  15.40, change: -0.20, changePercent: -1.28, market: 'EGX' },
+  { symbol: 'AAPL',  name: 'Apple Inc.',             price: 170.50, change:  2.30, changePercent:  1.37, market: 'USA', open: 168.20, dayHigh: 171.30, dayLow: 167.80, prevClose: 168.20 },
+  { symbol: 'GOOGL', name: 'Alphabet Inc.',           price: 140.20, change: -1.50, changePercent: -1.06, market: 'USA', open: 142.10, dayHigh: 142.50, dayLow: 139.80, prevClose: 141.70 },
+  { symbol: 'MSFT',  name: 'Microsoft Corporation',   price: 415.30, change:  5.10, changePercent:  1.24, market: 'USA', open: 410.50, dayHigh: 416.00, dayLow: 409.80, prevClose: 410.20 },
+  { symbol: 'COMI',  name: 'Commercial Intl Bank',    price:  70.25, change:  1.10, changePercent:  1.59, market: 'EGX', open: 0, dayHigh: 0, dayLow: 0, prevClose: 0 },
+  { symbol: 'HRHO',  name: 'Hermes',                  price:  15.40, change: -0.20, changePercent: -1.28, market: 'EGX', open: 0, dayHigh: 0, dayLow: 0, prevClose: 0 },
 ];
 
 /** Mock all dashboard API calls */
@@ -52,6 +52,32 @@ export async function mockLoginSuccess(page: Page): Promise<void> {
 export async function mockLoginFailure(page: Page): Promise<void> {
   await page.route('**/api/auth/login', route =>
     route.fulfill({ status: 401, contentType: 'text/plain', body: 'Unauthorized' }));
+}
+
+/** Generate deterministic mock history points for a stock (mimics backend mock data) */
+function buildMockHistory(price: number, change: number, n = 30): { timestamp: number; price: number }[] {
+  const prevClose = price - change;
+  const now = Math.floor(Date.now() / 1000);
+  const interval = Math.floor(86400 / (n - 1));
+  const trend = (price - prevClose) / (n - 1);
+  const pts = [];
+  let p = prevClose;
+  for (let i = 0; i < n; i++) {
+    p = i === n - 1 ? price : p + trend + (Math.sin(i * 7.3) * price * 0.004);
+    pts.push({ timestamp: now - (n - 1 - i) * interval, price: +p.toFixed(4) });
+  }
+  return pts;
+}
+
+/** Mock the history endpoint for all mock stocks */
+export async function mockHistoryApi(page: Page): Promise<void> {
+  await page.route('**/api/stocks/*/history**', route => {
+    const url   = route.request().url();
+    const sym   = url.match(/stocks\/([^/]+)\/history/)?.[1] ?? 'AAPL';
+    const stock = STOCKS_MOCK.find(s => s.symbol === sym)
+               ?? { price: 100, change: 1 };
+    route.fulfill({ json: buildMockHistory(stock.price, stock.change) });
+  });
 }
 
 /** Mock a successful register response */

@@ -34,7 +34,8 @@
     "HOME": "Startseite",
     "ANALYTICS": "Analysen",
     "SETTINGS": "Einstellungen",
-    "LOGOUT": "Abmelden"
+    "LOGOUT": "Abmelden",
+    "SIGNED_IN": "Angemeldet"
   },
   "HEADER": {
     "DASHBOARD": "Dashboard"
@@ -51,7 +52,20 @@
     "REFRESH": "Aktualisieren",
     "LOADING": "Aktien werden geladen…",
     "ERROR": "Aktien konnten nicht geladen werden.",
-    "EMPTY": "Keine Aktien entsprechen deiner Suche"
+    "EMPTY": "Keine Aktien entsprechen deiner Suche",
+    "TRY_AGAIN": "Erneut versuchen",
+    "FILTER_ALL": "Alle",
+    "FILTER_USA": "USA",
+    "FILTER_EGX": "EGX",
+    "OPEN": "Eröffnung",
+    "MKT_CAP": "Marktkapital.",
+    "PREV_CLOSE": "Vorh. Schluss",
+    "HIGH": "Hoch",
+    "PE_RATIO": "KGV",
+    "W52_HIGH": "52W Hoch",
+    "LOW": "Tief",
+    "VOLUME": "Volumen",
+    "W52_LOW": "52W Tief"
   },
   "LANGUAGE": {
     "LABEL": "Sprache"

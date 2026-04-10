@@ -61,37 +61,50 @@
         <h1 class="text-base font-semibold text-slate-800">{{ 'HEADER.DASHBOARD' | translate }}</h1>
       </div>
 
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
 
         <!-- Language Selector -->
-        <select
-          [value]="langService.currentLang()"
-          (change)="langService.setLanguage($any($event.target).value)"
-          class="text-xs border border-slate-200 bg-slate-50 rounded-lg px-2.5 py-1.5 text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 cursor-pointer"
+        <button
+          [matMenuTriggerFor]="langMenu"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors"
         >
+          <mat-icon style="font-size:16px;width:16px;height:16px;line-height:16px" class="text-slate-500 shrink-0">language</mat-icon>
+          <span class="text-xs font-medium hidden sm:block">{{ currentLangLabel() }}</span>
+          <mat-icon style="font-size:16px;width:16px;height:16px;line-height:16px" class="text-slate-400 shrink-0">expand_more</mat-icon>
+        </button>
+
+        <mat-menu #langMenu="matMenu" panelClass="nav-menu-panel">
           @for (lang of langService.languages; track lang.code) {
-            <option [value]="lang.code">{{ lang.label }}</option>
+            <button mat-menu-item (click)="langService.setLanguage(lang.code)"
+                    [class.nav-menu-item-active]="langService.currentLang() === lang.code">
+              {{ lang.label }}
+            </button>
           }
-        </select>
+        </mat-menu>
 
         <!-- User Menu -->
         <button
           [matMenuTriggerFor]="userMenu"
           class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors"
         >
-          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-sm font-bold shadow-sm">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-sm font-bold shadow-sm shrink-0">
             {{ username.charAt(0).toUpperCase() }}
           </div>
           <span class="text-sm font-medium text-slate-700 hidden sm:block">{{ username }}</span>
-          <mat-icon class="text-slate-400 text-base">expand_more</mat-icon>
+          <mat-icon class="text-slate-400" style="font-size:16px;width:16px;height:16px;line-height:16px">expand_more</mat-icon>
         </button>
 
-        <mat-menu #userMenu="matMenu" class="mt-1">
-          <button mat-menu-item (click)="logout()">
-            <mat-icon class="text-red-500">logout</mat-icon>
-            <span class="text-red-600 font-medium">{{ 'NAV.LOGOUT' | translate }}</span>
+        <mat-menu #userMenu="matMenu" panelClass="nav-menu-panel">
+          <div class="nav-menu-user-header" (click)="$event.stopPropagation()">
+            <p class="nav-menu-user-name">{{ username }}</p>
+            <p class="nav-menu-user-sub">{{ 'NAV.SIGNED_IN' | translate }}</p>
+          </div>
+          <button mat-menu-item (click)="logout()" class="nav-menu-danger">
+            <mat-icon>logout</mat-icon>
+            <span>{{ 'NAV.LOGOUT' | translate }}</span>
           </button>
         </mat-menu>
+
       </div>
     </header>
 

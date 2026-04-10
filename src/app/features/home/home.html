@@ -54,15 +54,15 @@
 
         <!-- Market Tabs -->
         <div class="flex rounded-xl border border-slate-200 overflow-hidden text-xs font-semibold bg-slate-50">
-          @for (m of ['ALL','EGX','USA']; track m) {
+          @for (tab of marketTabs; track tab.value) {
             <button
-              (click)="marketFilter.set(m)"
-              [class.bg-indigo-600]="marketFilter() === m"
-              [class.text-white]="marketFilter() === m"
-              [class.shadow-sm]="marketFilter() === m"
-              [class.text-slate-500]="marketFilter() !== m"
+              (click)="marketFilter.set(tab.value)"
+              [class.bg-indigo-600]="marketFilter() === tab.value"
+              [class.text-white]="marketFilter() === tab.value"
+              [class.shadow-sm]="marketFilter() === tab.value"
+              [class.text-slate-500]="marketFilter() !== tab.value"
               class="px-4 py-2 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-            >{{ m }}</button>
+            >{{ tab.labelKey | translate }}</button>
           }
         </div>
 
@@ -94,7 +94,7 @@
             <mat-icon class="text-red-500">wifi_off</mat-icon>
           </div>
           <p class="text-sm font-medium text-slate-600">{{ stocksError() | translate }}</p>
-          <button (click)="loadStocks()" class="text-xs text-indigo-500 hover:underline">Try again</button>
+          <button (click)="loadStocks()" class="text-xs text-indigo-500 hover:underline">{{ 'STOCKS.TRY_AGAIN' | translate }}</button>
         </div>
       }
 
@@ -113,9 +113,10 @@
 
             <!-- Card: colored top bar + sparkline graph -->
             <div
-              class="relative rounded-xl border bg-white p-4 hover:shadow-lg transition-all duration-200 overflow-hidden"
+              class="relative rounded-xl border bg-white p-4 hover:shadow-lg transition-all duration-200 overflow-hidden cursor-pointer"
               [class.border-emerald-200]="stock.changePercent >= 0"
               [class.border-red-200]="stock.changePercent < 0"
+              (click)="openDetail(stock)"
             >
               <!-- Colored top accent bar -->
               <div

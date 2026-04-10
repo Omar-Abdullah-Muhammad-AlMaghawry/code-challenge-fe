@@ -85,31 +85,38 @@ test.describe('Language switching - dashboard', () => {
   });
 
   test('should show language selector in the toolbar', async ({ page }) => {
-    const langSelect = page.locator('header select');
-    await expect(langSelect).toBeVisible();
-    await expect(langSelect.locator('option')).toHaveCount(4);
+    const langBtn = page.locator('header button:has(mat-icon:text("language"))');
+    await expect(langBtn).toBeVisible();
+    await langBtn.click();
+    await expect(page.getByRole('menu')).toBeVisible();
+    await expect(page.getByRole('menuitem')).toHaveCount(4);
+    await page.keyboard.press('Escape');
   });
 
   test('should translate the dashboard header to German', async ({ page }) => {
-    await page.locator('header select').selectOption('de');
+    await page.locator('header button:has(mat-icon:text("language"))').click();
+    await page.getByRole('menuitem', { name: 'Deutsch' }).click();
     await expect(page.locator('header').getByText('Dashboard')).toBeVisible({ timeout: 5000 });
     // Sidebar nav items translate
     await expect(page.getByRole('link', { name: /startseite/i })).toBeVisible({ timeout: 5000 });
   });
 
   test('should translate the sidebar and stock section to Arabic', async ({ page }) => {
-    await page.locator('header select').selectOption('ar');
+    await page.locator('header button:has(mat-icon:text("language"))').click();
+    await page.getByRole('menuitem', { name: 'العربية' }).click();
     await expect(page.getByText('سوق الأسهم')).toBeVisible({ timeout: 5000 });
     await expect(page.getByText('الرئيسية')).toBeVisible({ timeout: 5000 });
   });
 
   test('should translate stock section heading to Spanish', async ({ page }) => {
-    await page.locator('header select').selectOption('es');
+    await page.locator('header button:has(mat-icon:text("language"))').click();
+    await page.getByRole('menuitem', { name: 'Español' }).click();
     await expect(page.getByText('Bolsa de valores')).toBeVisible({ timeout: 5000 });
   });
 
   test('should translate logout button in sidebar', async ({ page }) => {
-    await page.locator('header select').selectOption('de');
+    await page.locator('header button:has(mat-icon:text("language"))').click();
+    await page.getByRole('menuitem', { name: 'Deutsch' }).click();
     await expect(page.locator('aside').getByRole('button', { name: /abmelden/i })).toBeVisible({ timeout: 5000 });
   });
 });

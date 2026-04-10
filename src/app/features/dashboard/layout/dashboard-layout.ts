@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +22,9 @@ export class DashboardLayout {
 
   sidenavOpen = signal(true);
   username    = this.authService.getUser();
+  currentLangLabel = computed(() =>
+    this.langService.languages.find(l => l.code === this.langService.currentLang())?.label ?? 'English'
+  );
 
   navItems: NavItem[] = [
     { label: 'NAV.HOME',      icon: 'home',      route: '/dashboard/home'      },

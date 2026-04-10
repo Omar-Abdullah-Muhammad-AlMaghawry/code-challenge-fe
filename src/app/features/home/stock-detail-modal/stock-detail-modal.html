@@ -1,0 +1,190 @@
+<div class="bg-slate-900 rounded-2xl shadow-2xl border border-slate-700/60 overflow-hidden w-full">
+  <div class="max-h-[90vh] overflow-y-auto">
+
+    <!-- Header -->
+    <div class="flex items-start justify-between px-6 pt-6 pb-3">
+      <div>
+        <!-- Name + market badge -->
+        <div class="flex items-center gap-2 mb-2">
+          <h2 class="text-base font-bold text-white">{{ stock.name }}</h2>
+          <span
+            class="text-xs font-bold px-2 py-0.5 rounded-full"
+            [class.bg-indigo-100]="stock.market === 'USA'"
+            [class.text-indigo-700]="stock.market === 'USA'"
+            [class.bg-amber-100]="stock.market === 'EGX'"
+            [class.text-amber-700]="stock.market === 'EGX'"
+          >{{ stock.market }}:{{ stock.symbol }}</span>
+        </div>
+        <!-- Price + change -->
+        <div class="flex items-baseline gap-3 flex-wrap">
+          <span class="text-4xl font-bold text-white tracking-tight">
+            {{ currency }}{{ stock.price.toFixed(2) }}
+          </span>
+          <span
+            class="text-base font-semibold flex items-center gap-1"
+            [class.text-emerald-400]="isPositive"
+            [class.text-red-400]="!isPositive"
+          >
+            <mat-icon style="font-size:18px;width:18px;height:18px">
+              {{ isPositive ? 'arrow_upward' : 'arrow_downward' }}
+            </mat-icon>
+            {{ sign }}{{ absChange }} ({{ sign }}{{ absPercent }}%)
+          </span>
+        </div>
+      </div>
+
+      <!-- Close button -->
+      <button
+        (click)="close()"
+        aria-label="Close"
+        class="p-2 rounded-lg text-slate-400 hover:bg-slate-700 hover:text-white transition-colors shrink-0"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Period tabs -->
+    <div class="flex gap-1 px-6 pb-4">
+      @for (p of periods; track p) {
+        <button
+          (click)="selectedPeriod.set(p)"
+          class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+          [class.bg-slate-700]="selectedPeriod() === p"
+          [class.text-white]="selectedPeriod() === p"
+          [class.text-slate-400]="selectedPeriod() !== p"
+        >{{ p }}</button>
+      }
+    </div>
+
+    <!-- Chart -->
+    <div class="px-4 pb-3">
+      <div class="relative">
+
+      <!-- Loading overlay while fetching real data -->
+      @if (historyLoading()) {
+        <div class="absolute inset-0 flex items-center justify-center z-10 rounded-lg"
+             style="background: rgba(15,23,42,0.6)">
+          <mat-icon class="animate-spin text-indigo-400" style="font-size:28px;width:28px;height:28px">sync</mat-icon>
+        </div>
+      }
+
+      <svg viewBox="0 0 540 210" class="w-full" style="display: block;">
+        <defs>
+          <linearGradient [attr.id]="gradId" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   [attr.stop-color]="color" stop-opacity="0.30"/>
+            <stop offset="100%" [attr.stop-color]="color" stop-opacity="0"/>
+          </linearGradient>
+          <clipPath [attr.id]="clipId">
+            <rect x="50" y="0" width="486" height="175"/>
+          </clipPath>
+        </defs>
+
+        <!-- Horizontal grid lines -->
+        @for (lbl of yAxisLabels(); track lbl.price) {
+          <line
+            x1="50" [attr.y1]="lbl.y"
+            x2="536" [attr.y2]="lbl.y"
+            stroke="#1e293b" stroke-width="1" stroke-dasharray="3,5"
+          />
+        }
+
+        <!-- Prev-close dotted line (full width, label is an HTML overlay outside SVG) -->
+        <line
+          x1="50" [attr.y1]="prevCloseY()"
+          x2="536" [attr.y2]="prevCloseY()"
+          stroke="#475569" stroke-width="1" stroke-dasharray="4,4"
+        />
+
+        <!-- Area fill (clipped) -->
+        <path
+          [attr.d]="chartAreaPath()"
+          [attr.fill]="'url(#' + gradId + ')'"
+          [attr.clip-path]="'url(#' + clipId + ')'"
+        />
+
+        <!-- Chart line (clipped) -->
+        <path
+          [attr.d]="chartPath()"
+          fill="none"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          [attr.stroke]="color"
+          [attr.clip-path]="'url(#' + clipId + ')'"
+        />
+
+        <!-- Y-axis labels -->
+        @for (lbl of yAxisLabels(); track lbl.price) {
+          <text
+            x="44" [attr.y]="lbl.y + 4"
+            text-anchor="end" font-size="10" fill="#475569" font-family="monospace"
+          >{{ lbl.price }}</text>
+        }
+
+        <!-- X-axis labels -->
+        @for (lbl of xAxisLabels(); track lbl.label) {
+          <text
+            [attr.x]="lbl.x" y="193"
+            text-anchor="middle" font-size="10" fill="#475569" font-family="monospace"
+          >{{ lbl.label }}</text>
+        }
+      </svg>
+
+      <!-- Prev close label: HTML overlay aligned to the dotted line via % top -->
+      <div
+        class="absolute right-0 pr-1 pointer-events-none text-right"
+        [style.top]="prevCloseLabelTop()"
+        style="transform: translateY(-50%)"
+      >
+        <span class="block text-xs leading-none font-mono" style="color:#64748b">{{ 'STOCKS.PREV_CLOSE' | translate }}</span>
+        <span class="block text-xs font-bold font-mono" style="color:#94a3b8">{{ currency }}{{ prevClose.toFixed(2) }}</span>
+      </div>
+
+      </div><!-- /relative chart wrapper -->
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-3 gap-px bg-slate-700/30 mx-6 mb-6 rounded-xl overflow-hidden border border-slate-700/40">
+
+      <div class="bg-slate-800/80 px-4 py-3">
+        <p class="text-xs text-slate-400 mb-0.5">{{ 'STOCKS.OPEN' | translate }}</p>
+        <p class="text-sm font-bold text-white">{{ stats.open }}</p>
+      </div>
+      <div class="bg-slate-800/80 px-4 py-3">
+        <p class="text-xs text-slate-400 mb-0.5">{{ 'STOCKS.MKT_CAP' | translate }}</p>
+        <p class="text-sm font-bold text-white">{{ stats.mktCap }}</p>
+      </div>
+      <div class="bg-slate-800/80 px-4 py-3">
+        <p class="text-xs text-slate-400 mb-0.5">{{ 'STOCKS.PREV_CLOSE' | translate }}</p>
+        <p class="text-sm font-bold text-white">{{ stats.prevClose }}</p>
+      </div>
+
+      <div class="bg-slate-800/80 px-4 py-3">
+        <p class="text-xs text-slate-400 mb-0.5">{{ 'STOCKS.HIGH' | translate }}</p>
+        <p class="text-sm font-bold text-emerald-400">{{ stats.high }}</p>
+      </div>
+      <div class="bg-slate-800/80 px-4 py-3">
+        <p class="text-xs text-slate-400 mb-0.5">{{ 'STOCKS.PE_RATIO' | translate }}</p>
+        <p class="text-sm font-bold text-white">{{ stats.pe }}</p>
+      </div>
+      <div class="bg-slate-800/80 px-4 py-3">
+        <p class="text-xs text-slate-400 mb-0.5">{{ 'STOCKS.W52_HIGH' | translate }}</p>
+        <p class="text-sm font-bold text-emerald-400">{{ stats.w52high }}</p>
+      </div>
+
+      <div class="bg-slate-800/80 px-4 py-3">
+        <p class="text-xs text-slate-400 mb-0.5">{{ 'STOCKS.LOW' | translate }}</p>
+        <p class="text-sm font-bold text-red-400">{{ stats.low }}</p>
+      </div>
+      <div class="bg-slate-800/80 px-4 py-3">
+        <p class="text-xs text-slate-400 mb-0.5">{{ 'STOCKS.VOLUME' | translate }}</p>
+        <p class="text-sm font-bold text-white">{{ stats.volume }}</p>
+      </div>
+      <div class="bg-slate-800/80 px-4 py-3">
+        <p class="text-xs text-slate-400 mb-0.5">{{ 'STOCKS.W52_LOW' | translate }}</p>
+        <p class="text-sm font-bold text-red-400">{{ stats.w52low }}</p>
+      </div>
+
+    </div>
+  </div>
+</div>

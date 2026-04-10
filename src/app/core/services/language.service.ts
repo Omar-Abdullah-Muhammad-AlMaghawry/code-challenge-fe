@@ -58,8 +58,11 @@ export class LanguageService {
           this.currentLang.set(code);
           localStorage.setItem('lang', code);
           const lang = this.languages.find(l => l.code === code);
-          document.documentElement.setAttribute('dir',  lang?.dir  ?? 'ltr');
+          const dir = lang?.dir ?? 'ltr';
+          document.documentElement.setAttribute('dir',  dir);
           document.documentElement.setAttribute('lang', code);
+          document.body.setAttribute('dir', dir);
+          document.querySelector('.cdk-overlay-container')?.setAttribute('dir', dir);
           this.langChange$.next(code);
           resolve();
         },

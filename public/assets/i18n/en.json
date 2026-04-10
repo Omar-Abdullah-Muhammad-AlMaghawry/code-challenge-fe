@@ -34,7 +34,8 @@
     "HOME": "Home",
     "ANALYTICS": "Analytics",
     "SETTINGS": "Settings",
-    "LOGOUT": "Logout"
+    "LOGOUT": "Logout",
+    "SIGNED_IN": "Signed in"
   },
   "HEADER": {
     "DASHBOARD": "Dashboard"
@@ -51,7 +52,20 @@
     "REFRESH": "Refresh",
     "LOADING": "Loading stocks…",
     "ERROR": "Failed to load stocks.",
-    "EMPTY": "No stocks match your search"
+    "EMPTY": "No stocks match your search",
+    "TRY_AGAIN": "Try again",
+    "FILTER_ALL": "ALL",
+    "FILTER_USA": "USA",
+    "FILTER_EGX": "EGX",
+    "OPEN": "Open",
+    "MKT_CAP": "Mkt Cap",
+    "PREV_CLOSE": "Prev close",
+    "HIGH": "High",
+    "PE_RATIO": "P/E ratio",
+    "W52_HIGH": "52W high",
+    "LOW": "Low",
+    "VOLUME": "Volume",
+    "W52_LOW": "52W low"
   },
   "LANGUAGE": {
     "LABEL": "Language"

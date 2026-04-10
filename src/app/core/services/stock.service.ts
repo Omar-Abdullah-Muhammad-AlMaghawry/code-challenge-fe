@@ -9,6 +9,16 @@ export interface Stock {
   change:        number;
   changePercent: number;
   market:        string;
+  // Real intraday stats from Finnhub quote (0 for EGX static data)
+  open:          number;
+  dayHigh:       number;
+  dayLow:        number;
+  prevClose:     number;
+}
+
+export interface HistoryPoint {
+  timestamp: number; // Unix seconds
+  price:     number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -18,5 +28,9 @@ export class StockService extends BaseHttpService {
     if (search) params['search'] = search;
     if (market && market !== 'ALL') params['market'] = market;
     return this.get<Stock[]>('/stocks', params);
+  }
+
+  getHistory(symbol: string, period: string): Observable<HistoryPoint[]> {
+    return this.get<HistoryPoint[]>(`/stocks/${symbol}/history`, { period });
   }
 }

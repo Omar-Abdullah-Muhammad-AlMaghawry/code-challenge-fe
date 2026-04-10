@@ -34,7 +34,8 @@
     "HOME": "Inicio",
     "ANALYTICS": "Analíticas",
     "SETTINGS": "Configuración",
-    "LOGOUT": "Cerrar sesión"
+    "LOGOUT": "Cerrar sesión",
+    "SIGNED_IN": "Conectado"
   },
   "HEADER": {
     "DASHBOARD": "Panel de control"
@@ -51,7 +52,20 @@
     "REFRESH": "Actualizar",
     "LOADING": "Cargando acciones…",
     "ERROR": "Error al cargar acciones.",
-    "EMPTY": "Ninguna acción coincide con tu búsqueda"
+    "EMPTY": "Ninguna acción coincide con tu búsqueda",
+    "TRY_AGAIN": "Intentar de nuevo",
+    "FILTER_ALL": "TODO",
+    "FILTER_USA": "EEUU",
+    "FILTER_EGX": "EGX",
+    "OPEN": "Apertura",
+    "MKT_CAP": "Cap. de Merc.",
+    "PREV_CLOSE": "Cierre anterior",
+    "HIGH": "Máximo",
+    "PE_RATIO": "P/E",
+    "W52_HIGH": "Máx. 52S",
+    "LOW": "Mínimo",
+    "VOLUME": "Volumen",
+    "W52_LOW": "Mín. 52S"
   },
   "LANGUAGE": {
     "LABEL": "Idioma"
